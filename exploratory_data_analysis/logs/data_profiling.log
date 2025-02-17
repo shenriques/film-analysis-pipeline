@@ -1,0 +1,6 @@
+INFO @ 2025-02-17 11:29:28,900: File: ../data/links.csv loaded successfully. Total rows, colums: (45843, 3)
+INFO @ 2025-02-17 11:29:30,301: File: ../data/credits.csv loaded successfully. Total rows, colums: (45476, 3)
+INFO @ 2025-02-17 11:29:31,806: File: ../data/movies_metadata.csv loaded successfully. Total rows, colums: (45466, 24)
+INFO @ 2025-02-17 11:29:37,541: File: ../data/ratings.csv loaded successfully. Total rows, colums: (26024289, 4)
+INFO @ 2025-02-17 11:29:51,297: File: ../data/keywords.csv loaded successfully. Total rows, colums: (46419, 2)
+INFO @ 2025-02-17 11:29:51,364: Finished data profiling, view outputs/data_summary.md
