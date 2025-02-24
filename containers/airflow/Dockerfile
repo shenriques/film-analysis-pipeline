@@ -5,8 +5,8 @@ RUN pip install --no-cache-dir -r /requirements.txt
 COPY quarto.sh /
 RUN cd / && bash /quarto.sh
 
-COPY setup_conn.py $AIRFLOW_HOME
-RUN python $AIRFLOW_HOME/setup_conn.py
+COPY setup_airflow_conn.py $AIRFLOW_HOME
+RUN python $AIRFLOW_HOME/setup_airflow_conn.py
 
 USER root
 
@@ -22,16 +22,22 @@ ENV JAVA_HOME='/usr'
 # update the path variables
 ENV PATH=$PATH:$JAVA_HOME/bin
 
+# install file command for checking file types (not included in lightweight imgs)
+RUN apt-get update && apt-get install -y file
+
 # download spark
-RUN curl https://dlcdn.apache.org/spark/spark-3.5.1/spark-3.5.1-bin-hadoop3.tgz -o spark-3.5.1-bin-hadoop3.tgz
+RUN curl -fsSL -o spark-3.5.4-bin-hadoop3.tgz https://dlcdn.apache.org/spark/spark-3.5.4/spark-3.5.4-bin-hadoop3.tgz
+
+# verify download
+RUN ls -lh spark-3.5.4-bin-hadoop3.tgz && file spark-3.5.4-bin-hadoop3.tgz
 
 # Change permissions of the downloaded tarball to make it accessible
-RUN chmod 755 spark-3.5.1-bin-hadoop3.tgz
+RUN chmod 755 spark-3.5.4-bin-hadoop3.tgz
 
-# Create the target directory and extract the tarball to it
-# --strip-components=1 : removes root directory (which is 'spark-3.5.1-bin-hadoop3/') from extracted files, everything gets put in /opt/spark = easier installation, no nested dirs
-    # you would also have to do ENV SPARK_HOME=/opt/spark/spark-3.5.1-bin-hadoop3
-RUN mkdir -p /opt/spark && tar xvzf spark-3.5.1-bin-hadoop3.tgz --directory /opt/spark --strip-components=1
+# # Create the target directory and extract the tarball to it
+# # --strip-components=1 : removes root directory (which is 'spark-3.5.4-bin-hadoop3/') from extracted files, everything gets put in /opt/spark = easier installation, no nested dirs
+#     # you would also have to do ENV SPARK_HOME=/opt/spark/spark-3.5.4-bin-hadoop3
+RUN mkdir -p /opt/spark && tar xvzf spark-3.5.4-bin-hadoop3.tgz --directory /opt/spark --strip-components=1
 
 # sets SPARK_HOME env variable to point to spark installation directory
 # updates path so you can run commands from anywhere
