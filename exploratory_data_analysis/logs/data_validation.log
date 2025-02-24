@@ -1,0 +1,4 @@
+INFO @ 2025-02-24 20:23:31,629: File: ../data/movies_metadata.csv loaded successfully
+INFO @ 2025-02-24 20:23:37,140: File: ../data/ratings.csv loaded successfully
+INFO @ 2025-02-24 20:23:38,548: File: ../data/credits.csv loaded successfully
+INFO @ 2025-02-24 20:23:38,628: Finished data validation, view outputs/data_validation.md
