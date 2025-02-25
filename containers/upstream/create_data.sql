@@ -7,7 +7,7 @@ CREATE TABLE films.films_raw (
     budget INT,
     genres TEXT,
     homepage TEXT, -- treat urls as long strings & store as text
-    id INT PRIMARY KEY,
+    id INT, -- removed primary key constraint becuase EDA tells us theres duplicates
     imdb_id VARCHAR(15),
     original_language VARCHAR(5),
     original_title TEXT,
