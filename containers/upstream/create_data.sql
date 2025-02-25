@@ -52,7 +52,7 @@ COPY films.films_raw(
     title,
     video,
     vote_average,
-    vote_count,
+    vote_count
 )
 FROM '/input_data/movies_metadata.csv' DELIMITER ',' CSV HEADER;
 
