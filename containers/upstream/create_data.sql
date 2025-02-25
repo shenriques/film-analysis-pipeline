@@ -3,9 +3,9 @@ CREATE SCHEMA films;
 -- FILMS
 CREATE TABLE films.films_raw (
     adult BOOLEAN,
-    belongs_to_collection JSONB, -- json
+    belongs_to_collection TEXT, -- invalid json
     budget INT,
-    genres JSONB,
+    genres TEXT,
     homepage TEXT, -- treat urls as long strings & store as text
     id INT PRIMARY KEY,
     imdb_id VARCHAR(15),
@@ -14,12 +14,12 @@ CREATE TABLE films.films_raw (
     overview TEXT,
     popularity NUMERIC(10,6),
     poster_path TEXT,
-    production_companies JSONB,
-    production_countries JSONB,
+    production_companies TEXT,
+    production_countries TEXT,
     release_date DATE,
     revenue BIGINT, -- for if revenue exceeds 2.2 billion which is the max for int
     runtime NUMERIC(5,2), -- runtimes have small decimals
-    spoken_languages JSONB,
+    spoken_languages TEXT,
     status VARCHAR(20),
     tagline TEXT,
     title TEXT,
