@@ -2,31 +2,33 @@ CREATE SCHEMA films;
 
 -- FILMS
 CREATE TABLE films.films_raw (
-    adult BOOLEAN,
+    adult TEXT, -- should be boolean but some bad values e.g. - Written by Ørnås
     belongs_to_collection TEXT, -- invalid json
-    budget INT,
+    budget TEXT, -- should be int but bad values e.g. a jpg link
     genres TEXT,
     homepage TEXT, -- treat urls as long strings & store as text
-    id INT, -- removed primary key constraint becuase EDA tells us theres duplicates
+    id TEXT, -- should be int but bad values / removed primary key constraint becuase EDA tells us theres duplicates
     imdb_id VARCHAR(15),
     original_language VARCHAR(5),
     original_title TEXT,
     overview TEXT,
-    popularity NUMERIC(10,6),
+    popularity TEXT, -- should be NUMERIC(10,6) but "Beware Of Frost Bites" is in here for some reason
     poster_path TEXT,
     production_companies TEXT,
     production_countries TEXT,
-    release_date DATE,
-    revenue BIGINT, -- for if revenue exceeds 2.2 billion which is the max for int
-    runtime NUMERIC(5,2), -- runtimes have small decimals
+    release_date TEXT, -- should be DATE but bad data
+    revenue NUMERIC(15,2), -- some float values present
+    runtime NUMERIC(5,1), -- runtimes have small decimals
     spoken_languages TEXT,
     status VARCHAR(20),
     tagline TEXT,
     title TEXT,
     video BOOLEAN,
     vote_average NUMERIC(3,1), -- averages between 0-10 with 1 decimal
-    vote_count BIGINT -- incase
+    vote_count NUMERIC(10,2) -- incase
 );
+
+-- ALTER TABLE films.films_raw ALTER COLUMN popularity DROP NOT NULL;
 
 COPY films.films_raw(
     adult,
@@ -54,16 +56,16 @@ COPY films.films_raw(
     vote_average,
     vote_count
 )
-FROM '/input_data/movies_metadata.csv' DELIMITER ',' CSV HEADER;
+FROM '/input_data/movies_metadata_jsonclean.csv' DELIMITER ',' CSV HEADER NULL AS '';
 
 -- CREDITS
 CREATE TABLE films.credits_raw (
     id INT PRIMARY KEY,
-    cast JSONB,
+    film_cast JSONB, -- 'cast' is reserved keyword
     crew JSONB
 );
 
-COPY films.credits_raw(id, cast, crew)
+COPY films.credits_raw(id, film_cast, crew)
 FROM '/input_data/credits_raw.csv' DELIMITER ',' CSV HEADER;
 
 -- KEYWORDS
