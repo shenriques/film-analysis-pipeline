@@ -49,6 +49,11 @@ services:
     command: webserver
     ports:
       - 8080:8080
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully # checks db has run first 
     healthcheck:
       test:
         [
@@ -66,6 +71,11 @@ services:
     <<: *airflow-common
     container_name: scheduler
     command: scheduler
+    depends_on:
+      postgres:
+        condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
     healthcheck:
       test:
         [
@@ -79,13 +89,26 @@ services:
 
   airflow-init:
     <<: *airflow-common
-    command: version
+    command: >
+      bash -c "
+      airflow db migrate && 
+      airflow users create --username \"${_AIRFLOW_WWW_USER_USERNAME:-airflow}\" \
+                           --password \"${_AIRFLOW_WWW_USER_PASSWORD:-airflow}\" \
+                           --firstname \"Airflow\" \
+                           --lastname \"Admin\" \
+                           --role \"Admin\" \
+                           --email \"admin@example.com\" &&
+      echo 'DC: airflow database initialised'
+      "
     environment:
       <<: *airflow-common-env
       _AIRFLOW_DB_MIGRATE: 'true'
       _AIRFLOW_WWW_USER_CREATE: 'true'
       _AIRFLOW_WWW_USER_USERNAME: ${_AIRFLOW_WWW_USER_USERNAME:-airflow}
       _AIRFLOW_WWW_USER_PASSWORD: ${_AIRFLOW_WWW_USER_PASSWORD:-airflow}
+    depends_on:
+      postgres:
+        condition: service_healthy
 
   minio:
     image: 'minio/minio:latest'
