@@ -1,76 +1,52 @@
 # Film Data Engineering Project 
 
-## Project Background
+A data pipeline for processing, analysing and visualisation data all about film.
 
-### Aims:
+## Overview
 
-- build a data pipeline for a film analytics company to process, analyse, and visualise movie-related datasets
-- the data includes information about movies, their metadata, keywords, cast and crew, and ratings
-- ingest, transform, store, and visualise the data for analytics and reporting purposes
+This project builds a complete data engineering pipeline for film analytics, transforming raw movie data into insights.
 
-### Project features:
+## Features:
 
-- pipeline orchestration using Apache Airflow in a Dockerized environment
-- Scalable data processing using Apache Spark
-- Object storage with Minio (S3-compatible)
-- Relational and warehouse-style databases with PostgreSQL and DuckDB
-- Testing, linting, and CI integration for quality assurance
-- Visualisation and reporting with Quarto and Plotly
+- **Orchestration**: Apache Airflow in a containerised environment
+- **Processing**: Apache Spark for scalable data transformations
+- **Storage**:
+    - Minio (S3-compatible) for object storage
+    - PostgreSQL for relational data
+    - DuckDB for analytical queries
+- **Quality Assurance**: Automated testing, linting, and CI integration
+- **Visualisation**: Interactive dashboards with Quarto and Plotly
 
-## Project Data
+## Data Source
 
-### Data Source
+The project uses [The Movies Dataset from Kaggle](https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset), which includes:
 
-https://www.kaggle.com/datasets/rounakbanik/the-movies-dataset
+- **movies_metadata.csv**: Information on 45,000 movies (posters, budget, revenue, release dates, languages, production details)
+- **keywords.csv**: Movie plot keywords (JSON format)
+- **credits.csv**: Cast and crew information (JSON format)
+- **links.csv**: TMDB and IMDB IDs for all movies
 
-movies_metadata.csv: The main Movies Metadata file. Contains information on 45,000 movies featured in the Full MovieLens dataset. Features include posters, backdrops, budget, revenue, release dates, languages, production countries and companies.
+## Architecture
 
-keywords.csv: Contains the movie plot keywords for our MovieLens movies. Available in the form of a stringified JSON Object.
+### Docker Services
 
-credits.csv: Consists of Cast and Crew Information for all our movies. Available in the form of a stringified JSON Object.
+| Service               | Purpose                                    |
+| --------------------- | ------------------------------------------ |
+| **PostgreSQL**        | Source database and Airflow metadata store |
+| **Airflow Webserver** | Web interface for DAG management           |
+| **Airflow Scheduler** | Triggers DAGs based on defined schedules   |
+| **Minio**             | S3-compatible object storage               |
+| **PGAdmin**           | Database administration interface          |
 
-links.csv: The file that contains the TMDB and IMDB IDs of all the movies featured in the Full MovieLens dataset.
+## Development Workflow
 
-### Exploratory Data Analysis
+0. **Exploratory Data Analysis**: Python scripts give an overview of the data, including any inconsistencies
+1. **Data Ingestion**: Raw data is loaded from CSVs into PostgreSQL
+2. **Transformation**: Spark jobs clean and transform the data
+3. **Storage**: Processed data is stored in optimised formats
+4. **Analysis**: DuckDB performs analytical queries
+5. **Visualisation**: Quarto generates reports with Plotly visualisations
 
-- develop scripts to understand the data and output results to markdown
+## Setup
 
-## Order of Development
-
-### 1. Create the skeleton
-
-- create containers/airflow which contains:
-    - Dockerfile to set up Airflow image with Quarto and Spark
-    - bash script to set up Quarto
-    - requirements.txt
-    - python script to set up airflow connections
-
-- create data/ which contains
-    - CSV of the input data 
-
-- create containers/upstream which contains:
-    - SQL script to create the source database and load the local data into it 
-
-- create docker compose file which:
-    - sets up data pipeline environment with containers for airflow, postgres and minio
-    - includes mounted directories so they can share data / configurations
-
-    - has an x-airflow-common
-
-    - has service for postgres
-        - postgres database used for airflow for metadata
-        - does a health check to check service is ready before dependencies (airflow) start
-        - ./data:/input_data: shares data between host and container
-        - ./containers/upstream:/docker-entrypoint-initdb.d: folder has initialisation scripts to be executed when the database is first started
-
-    - has service for airflow web server
-        - runs the web interface so you can see the DAGS
-
-    - has service for airflow scheduler 
-        - what triggers DAGs based on schedules
-        - gets config from x-airflow-common
-
-    - has service for airflow init  
-        - initialises airflow by performing database migrations and creating web server user 
-
-    - has service for minio
+TBC
