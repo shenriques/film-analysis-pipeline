@@ -60,22 +60,22 @@ FROM '/input_data/movies_metadata_jsonclean.csv' DELIMITER ',' CSV HEADER NULL A
 
 -- CREDITS
 CREATE TABLE films.credits_raw (
-    id INT PRIMARY KEY,
-    film_cast JSONB, -- 'cast' is reserved keyword
-    crew JSONB
+    id TEXT,
+    film_cast TEXT, -- 'cast' is reserved keyword
+    crew TEXT
 );
 
 COPY films.credits_raw(id, film_cast, crew)
-FROM '/input_data/credits_raw.csv' DELIMITER ',' CSV HEADER;
+FROM '/input_data/credits.csv' DELIMITER ',' CSV HEADER;
 
 -- KEYWORDS
 CREATE TABLE films.keywords_raw (
-    id INT PRIMARY KEY,
-    keywords JSONB
+    id INT,
+    keywords TEXT
 );
 
 COPY films.keywords_raw(id, keywords)
-FROM '/input_data/keywords_raw.csv' DELIMITER ',' CSV HEADER;
+FROM '/input_data/keywords.csv' DELIMITER ',' CSV HEADER;
 
 -- RATINGS
 CREATE TABLE films.ratings_raw (
@@ -88,14 +88,14 @@ CREATE TABLE films.ratings_raw (
 );
 
 COPY films.ratings_raw(user_id, movie_id, rating, timestamp)
-FROM '/input_data/ratings_raw.csv' DELIMITER ',' CSV HEADER;
+FROM '/input_data/ratings.csv' DELIMITER ',' CSV HEADER;
 
 -- LINKS
 CREATE TABLE films.links_raw (
     movie_id INT PRIMARY KEY,  
     imdb_id VARCHAR(10) NOT NULL,  -- account for occasional leading zeros
-    tmdb_id INT NOT NULL  
+    tmdb_id INT 
 );
 
 COPY films.links_raw(movie_id, imdb_id, tmdb_id)
-FROM '/input_data/links_raw.csv' DELIMITER ',' CSV HEADER;
+FROM '/input_data/links.csv' DELIMITER ',' CSV HEADER;
