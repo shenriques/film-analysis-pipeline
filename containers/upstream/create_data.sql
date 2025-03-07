@@ -1,3 +1,7 @@
+-- TO DO:
+-- add script for batch processing 
+    -- stream inserts in batches instead of COPY (copy loads everything at once, need to manage disk space better)
+
 CREATE SCHEMA films;
 
 -- FILMS
